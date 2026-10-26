@@ -2,7 +2,7 @@ import type Stripe from 'stripe'
 import type { Product } from '@/content/types'
 import { visibleProducts } from '@/content/products'
 import { imageForOptions, productImages } from '@/content/product-images'
-import { isDigital, madeToOrderNote, shippingCentsFor, shopTerms } from './terms'
+import { finalSaleNote, isDigital, madeToOrderNote, shippingCentsFor, shopTerms } from './terms'
 
 /**
  * Turns a bag (from the visitor's browser) into a Stripe Checkout Session. Prices,
@@ -98,8 +98,15 @@ export function sessionParams(plan: CheckoutPlan, siteOrigin: string, { automati
           delivery_estimate: { minimum: { unit: 'week', value: shopTerms.shipWeeks.min }, maximum: { unit: 'week', value: shopTerms.shipWeeks.max } },
         },
       }],
-      custom_text: { submit: { message: `Clothing, mugs and totes are made to order and ship in about ${shopTerms.shipWeeks.min}–${shopTerms.shipWeeks.max} weeks. If we can't ship in that time, we'll email you and you can cancel for a full refund.` } },
     }),
+    custom_text: {
+      submit: {
+        message: [
+          plan.hasPhysical && `Clothing, mugs and totes are made to order and ship in about ${shopTerms.shipWeeks.min}–${shopTerms.shipWeeks.max} weeks. If we can't ship in that time, we'll email you and you can cancel for a full refund.`,
+          finalSaleNote,
+        ].filter(Boolean).join(' '),
+      },
+    },
     ...(automaticTax && { automatic_tax: { enabled: true } }),
     metadata: { has_ebook: plan.hasEbook ? 'yes' : 'no', has_physical: plan.hasPhysical ? 'yes' : 'no' },
     success_url: `${siteOrigin}/shop/order?session_id={CHECKOUT_SESSION_ID}`,

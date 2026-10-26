@@ -5,6 +5,7 @@ import { connection } from 'next/server'
 import { CheckCircle2, Download, Package } from 'lucide-react'
 import { formatPrice } from '@/content/products'
 import { getOrder } from '@/lib/shop/orders'
+import { orderEmailsOn } from '@/lib/shop/email'
 import { shopTerms } from '@/lib/shop/terms'
 import { ClearBag } from '@/components/shop/clear-bag'
 import { ButtonLink, EmptyState } from '@/components/ui/primitives'
@@ -31,12 +32,12 @@ async function Order({ searchParams }: { searchParams: PageProps<'/shop/order'>[
         <p className="font-semibold">Payment received</p>
       </div>
       <h1 className="mt-3 text-[clamp(2rem,4.5vw,3rem)] font-extrabold leading-tight text-teal-deep">Thank you for your order</h1>
-      {order.email && <p className="mt-3 text-lg text-muted">A receipt is on its way to {order.email}.</p>}
+      {order.email && orderEmailsOn() && <p className="mt-3 text-lg text-muted">A confirmation is on its way to {order.email}.</p>}
 
       {order.hasEbook && (
         <section className="mt-8 rounded-[var(--radius-panel)] bg-teal-deep p-6 text-cream sm:p-8">
           <h2 className="text-2xl font-extrabold">Your handbook is ready</h2>
-          <p className="mt-2 text-cream/85">Download the PDF now. Bookmark this page or keep the email: the link keeps working.</p>
+          <p className="mt-2 text-cream/85">Download the PDF now. {orderEmailsOn() ? 'Bookmark this page or keep the email' : 'Bookmark this page'}: the link keeps working.</p>
           <a href={`/api/shop/ebook?session_id=${order.id}`} className="mt-5 inline-flex items-center gap-2.5 rounded-full bg-gold px-7 py-3.5 font-semibold text-teal-night transition hover:bg-highlight">
             <Download className="size-5" aria-hidden />Download the handbook (PDF)
           </a>
@@ -49,7 +50,7 @@ async function Order({ searchParams }: { searchParams: PageProps<'/shop/order'>[
           <div>
             <h2 className="font-display text-lg font-bold text-teal-deep">Made to order</h2>
             <p className="mt-1 text-muted">
-              We make your clothing, mugs and totes once your order comes in, so they ship in about {shopTerms.shipWeeks.min}–{shopTerms.shipWeeks.max} weeks. We&rsquo;ll email you when they ship.
+              We make your clothing, mugs and totes once your order comes in, so they ship in about {shopTerms.shipWeeks.min}–{shopTerms.shipWeeks.max} weeks. We&rsquo;ll email you when they ship. All sales are final.
               {order.shipTo && <> Shipping to {order.shipTo}.</>}
             </p>
           </div>

@@ -116,15 +116,14 @@ export const legalPages: LegalPage[] = [
   {
     slug: 'returns',
     title: 'Returns & Refunds',
-    summary: 'Returns and refunds for shop orders.',
+    summary: 'All sales are final.',
     updated: '2026-10-26',
     reviewed: false,
     sections: [
-      { id: 'ebooks', heading: 'Ebooks', blocks: [p('If the handbook isn’t what you expected, [contact us](/contact?topic=support) within 14 days of buying it and we’ll refund you in full.')] },
-      { id: 'cancel', heading: 'Cancelling a made-to-order item', blocks: [p('You can cancel clothing, mugs and totes for a full refund any time before they ship. [Contact us](/contact?topic=support) with the email you used at checkout.')] },
-      { id: 'returns', heading: 'Returns', blocks: [p('You can return unworn, unwashed clothing and unused mugs and totes within 30 days of delivery for a refund of the item price. [Contact us](/contact?topic=support) first and we’ll tell you where to send it.')] },
-      { id: 'damaged', heading: 'Damaged or wrong items', blocks: [p('If something arrives damaged or isn’t what you ordered, contact us within 30 days of delivery with a photo and we’ll send a replacement or refund you in full, including shipping, at no cost to you.')] },
-      { id: 'how', heading: 'How refunds are paid', blocks: [p('Refunds go back to the card or payment method you used, through Stripe. Your bank may take 5 to 10 business days to show them.')] },
+      { id: 'final', heading: 'All sales are final', blocks: [p('We don’t accept returns or exchanges, and we don’t give refunds for a change of mind, on any item: ebooks, clothing, mugs and totes. Please check sizes, colors and options before you order.')] },
+      { id: 'damaged', heading: 'Damaged or wrong items', blocks: [p('If something arrives damaged or isn’t what you ordered, [contact us](/contact?topic=support) within 30 days of delivery with a photo and we’ll send a replacement at no cost to you.')] },
+      { id: 'late', heading: 'If we can’t ship on time', blocks: [p('Made-to-order items usually ship in about 4 to 6 weeks. If your order can’t ship within the time we gave you, we’ll email you before that time runs out, and you can cancel for a full refund or wait for the new date.')] },
+      { id: 'how', heading: 'How refunds are paid', blocks: [p('When a refund applies, it goes back to the card or payment method you used, through Stripe. Your bank may take 5 to 10 business days to show it.')] },
     ],
   },
   {
@@ -137,7 +136,7 @@ export const legalPages: LegalPage[] = [
       { id: 'delivery', heading: 'How you get your ebook', blocks: [p('After checkout you can download the PDF straight from your order page. We also email you the download link. The link keeps working, so you can download the book again later.')] },
       { id: 'license', heading: 'What you can do with it', blocks: [p('Your purchase is for you and your household. You can print it, keep copies on your own devices and share it with people you live with. Please don’t post it online, resell it or share the file outside your household.')] },
       { id: 'updates', heading: 'Updates', blocks: [p('When we publish corrections to the edition you bought, your download link gives you the updated file.')] },
-      { id: 'refunds', heading: 'Refunds', blocks: [p('See [Returns & Refunds](/legal/returns): you can get a full refund on an ebook within 14 days of buying it.')] },
+      { id: 'refunds', heading: 'Refunds', blocks: [p('All ebook sales are final. If your download doesn’t work, [contact us](/contact?topic=support) and we’ll fix it. See [Returns & Refunds](/legal/returns).')] },
     ],
   },
   {

@@ -34,6 +34,7 @@ describe('shop checkout', () => {
     const d = sessionParams(digital, 'https://billixapp.com', { automaticTax: false })
     expect(d.shipping_options).toBeUndefined()
     expect(d.shipping_address_collection).toBeUndefined()
+    expect((d.custom_text?.submit as { message?: string } | undefined)?.message).toContain('All sales are final')
 
     const mixed = planCheckout([ebook, tee])
     if ('error' in mixed) throw new Error(mixed.error)

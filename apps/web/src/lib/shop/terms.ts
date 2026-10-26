@@ -16,6 +16,8 @@ export const shopTerms = {
 
 export const madeToOrderNote = `Made to order. Ships in about ${shopTerms.shipWeeks.min}–${shopTerms.shipWeeks.max} weeks.`
 
+export const finalSaleNote = 'All sales are final: no returns or exchanges.'
+
 export const shippingNote = `$${(shopTerms.shippingCents / 100).toFixed(2)} U.S. shipping, free on orders of $${shopTerms.freeShippingFromCents / 100} or more.`
 
 /** Ebooks and printables: delivered as a download, never shipped. */

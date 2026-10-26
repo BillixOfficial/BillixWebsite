@@ -24,6 +24,9 @@ async function send(to: string, subject: string, text: string, idempotencyKey: s
   if (!res.ok) console.error('order_email_failed', res.status, (await res.text()).slice(0, 300))
 }
 
+/** True when order emails can actually be sent. */
+export const orderEmailsOn = () => !!(process.env.RESEND_API_KEY?.trim() && process.env.SHOP_EMAIL_FROM?.trim())
+
 const itemList = (o: Order) => o.lines.map((l) => `- ${l.name}${Object.keys(l.options).length ? ` (${Object.values(l.options).join(', ')})` : ''} × ${l.qty}: ${formatPrice(l.amountCents)}`).join('\n')
 
 export async function sendOrderEmails(o: Order, eventId: string) {
