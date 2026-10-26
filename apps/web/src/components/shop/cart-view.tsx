@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import { products, formatPrice } from '@/content/products'
@@ -22,6 +22,13 @@ export function CartView({ live }: { live: boolean }) {
     return p && !isDigital(p) ? s + p.priceCents * l.qty : s
   }, 0)
   const shippingCents = shippingCentsFor(physicalCents)
+
+  // Coming back from Stripe with the browser's back button restores this page from cache: re-enable the button.
+  useEffect(() => {
+    const reset = (e: PageTransitionEvent) => e.persisted && setBusy(false)
+    window.addEventListener('pageshow', reset)
+    return () => window.removeEventListener('pageshow', reset)
+  }, [])
 
   const startCheckout = async () => {
     if (!live) return setCheckout(true)
