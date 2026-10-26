@@ -99,8 +99,8 @@ export const products: Product[] = [
   // More accessories and paper goods
   p('enamel-pin', 'Billix Piggy Enamel Pin', 'accessories', 1199, 'accessory', 'A hard-enamel pin of the Billix piggy bank.'),
   p('bill-organizer-folder', 'Billix Bill Organizer Folder', 'accessories', 1999, 'accessory', 'A 12-pocket expanding folder with a tab for every month.', { details: ['12 labeled pockets', 'Elastic closure', 'Fits letter-size bills'] }),
-  p('meter-reading-notepad', 'Meter Reading Notepad', 'workbooks', 899, 'accessory', 'A tear-off pad for logging electric, gas and water meter readings.'),
-  p('bill-day-desk-planner', 'Bill Day Desk Planner', 'workbooks', 2499, 'paperback', 'An undated desk planner built around due dates, with a monthly bill review page.', { featured: true, details: ['12 undated months', 'Monthly bill review pages', 'Lay-flat binding'] }),
+  p('meter-reading-notepad', 'Meter Reading Notepad', 'workbooks', 899, 'accessory', 'A magnetic tear-off pad that lives on the fridge. Write down your electric, gas and water meter readings each month, so you can check them against your bills.', { details: ['50 tear-off sheets, 5.5 × 8.5 in', 'Magnetic back that holds to the fridge', 'Pencil on a cotton cord included'] }),
+  p('bill-day-desk-planner', 'Bill Day Desk Planner', 'workbooks', 2499, 'hardcover', 'An undated desk planner built around due dates: a monthly calendar to mark every bill, and a “Bills this month” page for amounts and what’s paid. Deep teal linen cover with gold foil.', { featured: true, details: ['12 undated months', 'Monthly “Bills this month” pages', 'Linen hardcover, gold foil, gilded edges', 'Lay-flat binding, elastic band, two ribbons'] }),
   // Bundles are hidden (draft) until they are re-planned around the handbook and re-photographed:
   // their photos show books that are no longer sold.
   p('starter-bundle', 'Billix Starter Bundle', 'bundles', 3999, 'bundle', 'The Household Utility Savings Handbook ebook, the bill tracker and a Billix mug, together.', { status: 'draft', details: ['Handbook ebook + printable tracker', 'Billix ceramic mug', 'Gift-ready box'] }),

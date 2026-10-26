@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps<'/shop/[slug]'>): P
   return { title: `${p.name} | Shop`, description: p.description, alternates: { canonical: `/shop/${p.slug}` }, openGraph: img ? { images: [img] } : undefined }
 }
 
-const formatLabel = { paperback: 'Paperback', ebook: 'Ebook (PDF)', 'digital-download': 'Printable PDF', apparel: 'Apparel', accessory: 'Accessory', bundle: 'Bundle' } as const
+const formatLabel = { paperback: 'Paperback', hardcover: 'Hardcover', ebook: 'Ebook (PDF)', 'digital-download': 'Printable PDF', apparel: 'Apparel', accessory: 'Accessory', bundle: 'Bundle' } as const
 
 export default async function ProductPage({ params }: PageProps<'/shop/[slug]'>) {
   const { slug } = await params

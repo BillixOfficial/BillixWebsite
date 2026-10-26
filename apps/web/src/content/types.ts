@@ -206,7 +206,7 @@ export interface Product {
   collection: ShopCollection
   /** Proposed price in US cents; 0 = free. Configurable, not final. */
   priceCents: number
-  format: 'paperback' | 'ebook' | 'digital-download' | 'apparel' | 'accessory' | 'bundle'
+  format: 'paperback' | 'hardcover' | 'ebook' | 'digital-download' | 'apparel' | 'accessory' | 'bundle'
   status: ProductStatus
   description: string
   categories?: CategorySlug[]
