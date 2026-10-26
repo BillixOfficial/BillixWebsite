@@ -1,13 +1,19 @@
 import Link from 'next/link'
 import { clsx } from 'clsx'
 import { collections } from '@/content/products'
+import { checkoutLive } from '@/lib/shop/stripe'
+import { shopTerms } from '@/lib/shop/terms'
 
-/** Slim notice shown across shop pages: honest about checkout without shouting "coming soon" on every card. */
+/** Slim notice shown across shop pages: honest about checkout and made-to-order shipping. */
 export function ShopNotice() {
   return (
     <div className="bg-teal-deep text-cream">
       <p className="container-x py-2.5 text-center text-sm">
-        The Billix Shop is opening soon. Fill your bag now; <Link href="/cart" className="font-semibold text-highlight underline underline-offset-2">checkout opens at launch</Link>.
+        {checkoutLive() ? (
+          <>The handbook downloads right after checkout. Clothing, mugs and totes are made to order and ship in about {shopTerms.shipWeeks.min}–{shopTerms.shipWeeks.max} weeks.</>
+        ) : (
+          <>The Billix Shop is opening soon. Fill your bag now; <Link href="/cart" className="font-semibold text-highlight underline underline-offset-2">checkout opens at launch</Link>.</>
+        )}
       </p>
     </div>
   )

@@ -10,7 +10,7 @@ import { states } from '@/content/states'
 import { infoPages } from '@/content/pages'
 import { legalPages } from '@/content/legal'
 import { categoryIndex } from '@/content/category-index'
-import { features } from '@/config/site'
+import { checkoutLive } from '@/lib/shop/stripe'
 import type { ArticleBlock, Source } from '@/content/types'
 
 const blockStrings = (b: ArticleBlock): string[] =>
@@ -136,7 +136,10 @@ describe('content integrity', () => {
 
   it('never marks unbuilt features as available', () => {
     expect(products.every((p) => p.status !== 'published')).toBe(true)
-    expect(features.shopCheckout).toBe(false)
+    const key = process.env.STRIPE_SECRET_KEY
+    delete process.env.STRIPE_SECRET_KEY
+    expect(checkoutLive()).toBe(false) // checkout opens only when a Stripe key is configured
+    if (key !== undefined) process.env.STRIPE_SECRET_KEY = key
     for (const t of getTools().filter((x) => x.status === 'available')) expect(t.href).toMatch(/^\/tools\//)
   })
 })

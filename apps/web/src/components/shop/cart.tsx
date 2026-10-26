@@ -22,6 +22,8 @@ interface CartApi {
   remove: (index: number) => void
   clear: () => void
   lastAdded: { slug: string; at: number } | null
+  /** True once the bag has been loaded from this browser's storage. */
+  ready: boolean
 }
 
 const Ctx = createContext<CartApi | null>(null)
@@ -78,8 +80,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove: (index) => setLines((cur) => cur.filter((_, j) => j !== index)),
       clear: () => setLines([]),
       lastAdded,
+      ready,
     }
-  }, [lines, add, lastAdded])
+  }, [lines, add, lastAdded, ready])
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>
 }

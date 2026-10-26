@@ -59,7 +59,6 @@ export const appStores = {
 
 /** Feature flags. Flip to true only when the feature is genuinely live. */
 export const features = {
-  shopCheckout: false,
   accounts: false,
   askAlice: false,
   appLaunched: !!(appStores.ios || appStores.android),

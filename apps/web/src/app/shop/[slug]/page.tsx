@@ -7,6 +7,8 @@ import { productImages } from '@/content/product-images'
 import { siteUrl } from '@/config/site'
 import { AddToBag, ProductCard, ProductOptionsProvider, ProductGallery } from '@/components/shop/product-ui'
 import { ShopNotice } from '@/components/shop/shop-chrome'
+import { checkoutLive } from '@/lib/shop/stripe'
+import { finalSaleNote, madeToOrderNote, shippingNote } from '@/lib/shop/terms'
 
 export function generateStaticParams() {
   return visibleProducts.map((p) => ({ slug: p.slug }))
@@ -64,9 +66,9 @@ export default async function ProductPage({ params }: PageProps<'/shop/[slug]'>)
               )}
             </div>
             <ul className="mt-8 divide-y divide-line rounded-2xl bg-paper text-sm ring-1 ring-line">
-              <li className="flex gap-3 p-4"><Truck className="size-5 shrink-0 text-teal" aria-hidden /><span>{p.downloadUrl ? 'Downloads right away as a PDF.' : digital ? 'Delivered as a download link by email after purchase.' : 'Ships within the U.S. Rates are shown at checkout.'}</span></li>
-              <li className="flex gap-3 p-4"><RotateCcw className="size-5 shrink-0 text-teal" aria-hidden /><span>See our <Link href="/legal/returns" className="font-semibold underline">returns</Link> and <Link href="/legal/shipping" className="font-semibold underline">shipping</Link> policies.</span></li>
-              <li className="flex gap-3 p-4"><ShieldCheck className="size-5 shrink-0 text-teal" aria-hidden /><span>{p.downloadUrl ? 'Free to download and print for your household. No account needed.' : 'Checkout opens at launch. Nothing is charged until then.'}</span></li>
+              <li className="flex gap-3 p-4"><Truck className="size-5 shrink-0 text-teal" aria-hidden /><span>{p.downloadUrl ? 'Downloads right away as a PDF.' : digital ? 'Download the PDF right after checkout, with a copy of the link by email.' : `${madeToOrderNote} ${shippingNote}`}</span></li>
+              <li className="flex gap-3 p-4"><RotateCcw className="size-5 shrink-0 text-teal" aria-hidden /><span>{!p.downloadUrl && <>{finalSaleNote} </>}See our <Link href="/legal/returns" className="font-semibold underline">returns</Link> and <Link href="/legal/shipping" className="font-semibold underline">shipping</Link> policies.</span></li>
+              <li className="flex gap-3 p-4"><ShieldCheck className="size-5 shrink-0 text-teal" aria-hidden /><span>{p.downloadUrl ? 'Free to download and print for your household. No account needed.' : checkoutLive() ? 'Secure checkout by Stripe: card, Apple Pay or Google Pay.' : 'Checkout opens at launch. Nothing is charged until then.'}</span></li>
             </ul>
           </div>
         </div>
