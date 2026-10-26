@@ -8,6 +8,7 @@ import { ProductCard } from '@/components/shop/product-ui'
 import { CollectionNav, ShopNotice } from '@/components/shop/shop-chrome'
 import { AliceFace } from '@/components/brand/alice'
 import { Reveal } from '@/components/ui/reveal'
+import { checkoutLive } from '@/lib/shop/stripe'
 
 export const metadata: Metadata = {
   title: 'Shop',
@@ -72,7 +73,7 @@ export default function ShopPage() {
                 <Link href={`/shop/${handbook.slug}`} className="inline-flex items-center gap-2 rounded-full bg-teal-deep px-6 py-3 font-semibold text-cream transition hover:bg-teal-night">See what&rsquo;s inside <ArrowRight className="size-4" aria-hidden /></Link>
                 <p className="font-display text-2xl font-bold text-teal-deep">{formatPrice(handbook.priceCents)}</p>
               </div>
-              <p className="mt-3 text-sm text-muted">Coming soon. Checkout opens at launch, and nothing is charged until then.</p>
+              <p className="mt-3 text-sm text-muted">{checkoutLive() ? 'Download the PDF right after checkout.' : 'Coming soon. Checkout opens at launch, and nothing is charged until then.'}</p>
             </div>
           </div>
         </section>

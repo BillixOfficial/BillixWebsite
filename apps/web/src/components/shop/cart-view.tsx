@@ -4,14 +4,40 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import { products, formatPrice } from '@/content/products'
+import { isDigital, shippingCentsFor, shopTerms } from '@/lib/shop/terms'
 import { useCart } from './cart'
 import { ProductImage } from './product-ui'
 import { WaitlistForm } from '@/components/forms/waitlist-form'
 import { ButtonLink } from '@/components/ui/primitives'
 
-export function CartView() {
+/** `live` is true when Stripe checkout is set up (see lib/shop/stripe.ts); otherwise checkout explains it opens at launch. */
+export function CartView({ live }: { live: boolean }) {
   const { lines, setQty, remove, subtotalCents, count } = useCart()
   const [checkout, setCheckout] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+
+  const physicalCents = lines.reduce((s, l) => {
+    const p = products.find((x) => x.slug === l.slug)
+    return p && !isDigital(p) ? s + p.priceCents * l.qty : s
+  }, 0)
+  const shippingCents = shippingCentsFor(physicalCents)
+
+  const startCheckout = async () => {
+    if (!live) return setCheckout(true)
+    setBusy(true)
+    setError('')
+    try {
+      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lines }) })
+      const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string }
+      if (res.ok && data.url) return window.location.assign(data.url)
+      if (res.status === 503) setCheckout(true)
+      else setError(data.error ?? 'Checkout is having trouble right now. Please try again in a minute.')
+    } catch {
+      setError('We couldn’t reach checkout. Check your connection and try again.')
+    }
+    setBusy(false)
+  }
 
   if (lines.length === 0) {
     return (
@@ -60,11 +86,14 @@ export function CartView() {
         <h2 className="text-xl font-bold text-teal-deep">Order summary</h2>
         <dl className="mt-5 space-y-3 text-[0.95rem]">
           <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd className="font-semibold tabular-nums">{formatPrice(subtotalCents)}</dd></div>
-          <div className="flex justify-between"><dt className="text-muted">Shipping</dt><dd className="text-muted">Calculated at checkout</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">Shipping</dt><dd className={physicalCents && shippingCents ? 'font-semibold tabular-nums' : 'text-muted'}>{!physicalCents ? 'None (download)' : shippingCents ? formatPrice(shippingCents) : 'Free'}</dd></div>
           <div className="flex justify-between"><dt className="text-muted">Tax</dt><dd className="text-muted">Calculated at checkout</dd></div>
         </dl>
-        <button type="button" onClick={() => setCheckout(true)} className="mt-6 h-12 w-full rounded-full bg-gold font-semibold text-teal-night transition hover:bg-highlight">Checkout</button>
-        <p className="mt-3 text-center text-xs text-muted">Secure checkout by card. Your bag is saved on this device.</p>
+        {physicalCents > 0 && shippingCents > 0 && <p className="mt-3 text-sm text-muted">Free shipping on orders of {formatPrice(shopTerms.freeShippingFromCents)} or more.</p>}
+        <button type="button" onClick={startCheckout} disabled={busy} className="mt-6 h-12 w-full rounded-full bg-gold font-semibold text-teal-night transition hover:bg-highlight disabled:opacity-70">{busy ? 'Opening secure checkout…' : 'Checkout'}</button>
+        {error && <p className="mt-3 text-sm font-medium text-danger" role="alert">{error}</p>}
+        <p className="mt-3 text-center text-xs text-muted">{live ? 'Secure checkout by Stripe: card, Apple Pay or Google Pay.' : 'Secure checkout by card. Your bag is saved on this device.'}</p>
+        {physicalCents > 0 && <p className="mt-4 rounded-xl bg-mist p-3 text-xs text-muted">Clothing, mugs and totes are made to order and ship in about {shopTerms.shipWeeks.min}–{shopTerms.shipWeeks.max} weeks.</p>}
       </aside>
 
       {checkout && (

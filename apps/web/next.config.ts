@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Paid ebooks live outside public/ and ship only with the route that checks the order.
+  outputFileTracingIncludes: { '/api/shop/ebook': ['./private/ebooks/**'] },
   images: {
     // 90 is used for Alice's illustrations so her pencil texture stays crisp.
     qualities: [75, 90],
