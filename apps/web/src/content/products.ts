@@ -6,13 +6,12 @@ import type { Product, ShopCollection } from './types'
  * Prices are proposed and stored in cents so they can be changed in one place.
  */
 
-export const collections: { slug: ShopCollection; name: string; description: string }[] = [
-  { slug: 'books', name: 'Books & Ebooks', description: 'Plain-English guides to the bills every home pays.' },
-  { slug: 'digital', name: 'Digital Downloads', description: 'Printable trackers, worksheets and checklists.' },
+const allCollections: { slug: ShopCollection; name: string; description: string }[] = [
+  { slug: 'books', name: 'The Handbook', description: 'Our complete guide to the bills every home pays, as a PDF ebook.' },
+  { slug: 'digital', name: 'Free Printables', description: 'Three free worksheets from the handbook, ready to print and fill in.' },
   { slug: 'workbooks', name: 'Workbooks & Planners', description: 'Planners for budgeting the year ahead.' },
   { slug: 'apparel', name: 'Apparel', description: 'Billix tees, hoodies and hats.' },
   { slug: 'accessories', name: 'Accessories', description: 'Mugs, notebooks and desk gear.' },
-  { slug: 'alice', name: 'Alice Collection', description: 'Learning products starring Alice, for kids and families.' },
   { slug: 'bundles', name: 'Bundles & Gifts', description: 'Sets that pair well together.' },
 ]
 
@@ -27,40 +26,68 @@ const p = (
 ): Product => ({ slug, name, collection, priceCents, format, status: 'coming_soon', description, ...extra })
 
 export const products: Product[] = [
-  // Books & ebooks
-  p('billix-guide-paperback', 'The Billix Guide to Understanding Your Bills (Paperback)', 'books', 1999, 'paperback', 'The flagship Billix book: every common household bill, explained line by line.'),
-  p('billix-guide-ebook', 'The Billix Guide to Understanding Your Bills (Ebook)', 'books', 999, 'ebook', 'The flagship Billix book in digital form: read on any device.', { featured: true }),
-  p('homeowners-bill-handbook', 'The Complete Homeowner’s Bill Handbook', 'books', 2499, 'paperback', 'Mortgage, taxes, insurance, utilities and upkeep: the full cost of owning a home.', { categories: ['housing'] }),
-  p('electricity-bills-explained', 'Electricity Bills Explained (Ebook)', 'books', 799, 'ebook', 'Supply, delivery, riders and rates, made simple.', { categories: ['electricity'] }),
-  p('heating-your-home', 'Heating Your Home: Oil, Gas or Electric? (Ebook)', 'books', 999, 'ebook', 'How to compare heating fuels on the same unit of heat.', { categories: ['heating-cooling'] }),
-  p('water-sewer-bills', 'Understanding Water & Sewer Bills (Ebook)', 'books', 699, 'ebook', 'Why water bills rise and how to read every charge.', { categories: ['water-sewer'] }),
-  p('first-time-homeowner-guide', 'The First-Time Homeowner’s Expense Guide', 'books', 1999, 'paperback', 'The costs that surprise new owners, and how to plan for them.', { categories: ['housing'] }),
-  p('100-ways-review-expenses', '100 Ways to Review Your Household Expenses (Ebook)', 'books', 899, 'ebook', 'A practical checklist for reviewing every recurring bill.'),
+  // The handbook: the only Billix ebook
+  p('household-utility-savings-handbook', 'The Billix Household Utility Savings Handbook', 'books', 2499, 'ebook',
+    'The complete 2026 guide to the bills every US household pays: electricity, heating fuel, water, sewer, trash, internet and phone. Learn how each bill is built, find what you can cut, and measure what you actually save.',
+    {
+      featured: true,
+      details: ['246-page PDF, US Letter, 2026 edition', '14 chapters covering seven household bills', '26 worksheets, letters, scripts and checklists', '55 charts, diagrams and annotated sample bills', 'Facts checked through October 2026'],
+      inside: [
+        'Introduction: why understanding your bills matters, with an opening assessment',
+        'Understanding household utility bills',
+        'Electricity',
+        'Natural gas, propane, heating oil and other fuels',
+        'Heating, cooling, insulation and home efficiency',
+        'Water',
+        'Sewer, wastewater and stormwater',
+        'Home internet and TV',
+        'Mobile phone service',
+        'Trash and recycling',
+        'Billing disputes, negotiation and consumer protection',
+        'Renters, homeowners and moving',
+        'Financial assistance, discounts and hardship programs',
+        'Smart upgrades and return on investment',
+        'The Billix 30-day and 90-day savings plans',
+        'Appendix: scripts and letters, core worksheets, glossary and a reference index',
+      ],
+      specs: [
+        { label: 'Format', value: 'PDF ebook, US Letter' },
+        { label: 'Pages', value: '246' },
+        { label: 'Edition', value: '2026' },
+        { label: 'Figures', value: '55 charts, diagrams and sample bills' },
+        { label: 'Tools', value: '26 worksheets, letters and checklists' },
+        { label: 'Facts checked', value: 'Through October 2026' },
+      ],
+    }),
   // Digital downloads
-  p('monthly-bill-tracker', 'Monthly Household Bill Tracker', 'digital', 499, 'digital-download', 'A printable tracker for due dates, amounts and payments.', { featured: true }),
-  p('annual-bill-budget-planner', 'Annual Bill Budget Planner', 'digital', 699, 'digital-download', 'Plan a year of bills, including the once-a-year ones.'),
-  p('utility-comparison-worksheet', 'Utility Comparison Worksheet', 'digital', 399, 'digital-download', 'Compare plans and rates side by side on equal terms.'),
-  p('home-maintenance-planner', 'Home Maintenance Planner', 'digital', 599, 'digital-download', 'A seasonal schedule for the upkeep that prevents big bills.'),
-  p('first-time-homeowner-checklist', 'First-Time Homeowner Checklist', 'digital', 0, 'digital-download', 'Accounts to set up and costs to expect in your first year.'),
-  p('moving-utilities-checklist', 'Moving Utilities Checklist', 'digital', 0, 'digital-download', 'Every service to stop, start or transfer when you move, with timing.', { featured: true }),
-  p('subscription-audit-worksheet', 'Subscription Audit Worksheet', 'digital', 0, 'digital-download', 'List, total and review every subscription you pay for.'),
-  p('electricity-usage-log', 'Electricity Usage Log', 'digital', 299, 'digital-download', 'Track meter readings and spot unusual usage early.'),
-  p('home-heating-comparison-kit', 'Home Heating Comparison Kit', 'digital', 799, 'digital-download', 'Worksheets to compare fuels, equipment and quotes.'),
-  p('household-planner-bundle', 'Complete Household Planner Bundle', 'bundles', 1999, 'bundle', 'Every Billix tracker and planner in one download.'),
+  // Free printables: each is built from one of the handbook's tools by handbook/printables/printables.py (Billix_YouTube repo).
+  p('monthly-bill-tracker', 'Monthly Bill Tracker', 'digital', 0, 'digital-download', 'See a full year of household bills in one place: a year-at-a-glance grid, a page for every month with due dates and use, a provider directory, and a calendar of seasonal checks.', { featured: true, downloadUrl: '/downloads/billix-monthly-bill-tracker.pdf', details: ['Year-at-a-glance grid for every bill', 'Monthly page: due date, amount, use, last year', 'Provider directory with promotion end dates', '12-month calendar of seasonal checks'] }),
+  p('15-minute-bill-audit', 'The 15-Minute Bill Audit', 'digital', 0, 'digital-download', 'Check any utility bill in 15 minutes: confirm the reading and the dates, compare it with last month and last year, and split a change into days, price, fixed charges and use.', { featured: true, downloadUrl: '/downloads/billix-15-minute-bill-audit.pdf', details: ['Minute-by-minute steps', 'A worksheet to split a change into its causes', 'Two record sheets with tall write-in rows', 'What each result means and what to do next'] }),
+  p('annual-bill-budget-planner', 'Annual Bill Budget Planner', 'digital', 699, 'digital-download', 'Plan a year of bills, including the once-a-year ones.', { status: 'draft' }),
+  p('utility-comparison-worksheet', 'Utility Comparison Worksheet', 'digital', 399, 'digital-download', 'Compare plans and rates side by side on equal terms.', { status: 'draft' }),
+  p('home-maintenance-planner', 'Home Maintenance Planner', 'digital', 599, 'digital-download', 'A seasonal schedule for the upkeep that prevents big bills.', { status: 'draft' }),
+  p('first-time-homeowner-checklist', 'First-Time Homeowner Checklist', 'digital', 0, 'digital-download', 'Accounts to set up and costs to expect in your first year.', { status: 'draft' }),
+  p('moving-utilities-checklist', 'Moving Utilities Checklist', 'digital', 0, 'digital-download', 'Every service to stop, start or transfer when you move, in the right order: a timeline from weeks before to after the move, a tracker for each service, a meter-reading log and a final-bill and deposit check.', { featured: true, downloadUrl: '/downloads/billix-moving-utilities-checklist.pdf', details: ['A timeline from weeks before to after the move', 'A tracker for all seven services', 'Meter-reading log for the old and new home', 'Final-bill and deposit check'] }),
+  p('subscription-audit-worksheet', 'Subscription Audit Worksheet', 'digital', 0, 'digital-download', 'List, total and review every subscription you pay for.', { status: 'draft' }),
+  p('electricity-usage-log', 'Electricity Usage Log', 'digital', 299, 'digital-download', 'Track meter readings and spot unusual usage early.', { status: 'draft' }),
+  p('home-heating-comparison-kit', 'Home Heating Comparison Kit', 'digital', 799, 'digital-download', 'Worksheets to compare fuels, equipment and quotes.', { status: 'draft' }),
+  p('household-planner-bundle', 'Complete Household Planner Bundle', 'bundles', 1999, 'bundle', 'Every Billix tracker and planner in one download.', { status: 'draft' }),
   // Apparel
-  p('classic-tee', 'Billix Classic T-Shirt', 'apparel', 2499, 'apparel', 'Soft everyday tee with the Billix piggy-bank logo on the chest.', { featured: true, variants: [{ name: 'Color', options: ['Deep Teal', 'Cream', 'Heather Gray'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['100% ring-spun cotton', 'Relaxed unisex fit', 'Printed logo, wash-tested'] }),
-  p('signature-hoodie', 'Billix Signature Hoodie', 'apparel', 4999, 'apparel', 'Midweight fleece hoodie with an embroidered Billix logo.', { featured: true, variants: [{ name: 'Color', options: ['Deep Teal', 'Oatmeal'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Brushed fleece inside', 'Embroidered logo', 'Kangaroo pocket'] }),
-  p('understand-your-bills-tee', 'Understand Your Bills T-Shirt', 'apparel', 2699, 'apparel', 'The Billix motto, front and center.', { variants: [{ name: 'Color', options: ['Cream', 'Gold'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }] }),
-  p('alice-explains-tee', 'Alice Explains T-Shirt', 'apparel', 2799, 'apparel', 'Alice, ready to walk you through it, on a soft cream tee.', { variants: [{ name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }] }),
-  p('crewneck', 'Billix Crewneck', 'apparel', 4499, 'apparel', 'Classic crewneck sweatshirt with a small chest logo.', { variants: [{ name: 'Color', options: ['Gold', 'Deep Teal'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }] }),
-  p('baseball-cap', 'Billix Baseball Cap', 'apparel', 2499, 'apparel', 'Adjustable six-panel cap with an embroidered logo.', { variants: [{ name: 'Color', options: ['Deep Teal', 'Stone'] }] }),
-  p('beanie', 'Billix Beanie', 'apparel', 1999, 'apparel', 'Warm knit beanie for heating season.'),
-  p('polo', 'Billix Polo', 'apparel', 3499, 'apparel', 'Clean piqué polo with a small embroidered chest logo.', { variants: [{ name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }] }),
-  p('youth-tee', 'Billix Youth T-Shirt', 'apparel', 2199, 'apparel', 'Kids’ sizes, same soft tee, with Alice.', { variants: [{ name: 'Size', options: ['XS (4-5)', 'S (6-8)', 'M (10-12)', 'L (14-16)'] }] }),
-  p('tote-bag', 'Billix Tote Bag', 'apparel', 1899, 'accessory', 'Sturdy canvas tote.'),
+  p('classic-tee', 'Chenille Piggy Tee', 'apparel', 3899, 'apparel', 'Our piggy bank as a fuzzy chenille letterman patch, standing on its stack of cash, with Billix in chain-stitch script above it.', { featured: true, variants: [{ name: 'Color', options: ['Washed Black', 'Chocolate Brown', 'Forest Green'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Chenille and felt patch, chain-stitch script', 'Relaxed fit, thick ribbed collar'] }),
+  p('little-piggy-tee', 'Little Piggy Tee', 'apparel', 2999, 'apparel', 'A small embroidered piggy bank on the chest with a gold coin on its way in. The quiet one you will wear every week.', { featured: true, variants: [{ name: 'Color', options: ['Oatmeal', 'Bone', 'Sky Blue'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Dense satin-stitch embroidery', 'Relaxed fit, thick ribbed collar'] }),
+  p('thread-painted-piggy-tee', 'Thread-Painted Piggy Tee', 'apparel', 3999, 'apparel', 'The whole Billix picture, piggy, cash and gold sun, stitched in layers of thread so it reads like a small piece of hand embroidery.', { variants: [{ name: 'Color', options: ['Oatmeal', 'Washed Black', 'Dusty Blue'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Multi-shade thread-painted embroidery', 'Relaxed fit, thick ribbed collar'] }),
+  p('one-line-piggy-tee', 'One-Line Piggy Tee', 'apparel', 3299, 'apparel', 'Our piggy bank drawn in one unbroken line of cream chain stitch, with a gold coin dropping in.', { variants: [{ name: 'Color', options: ['Sage', 'Slate Blue', 'Rust'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Chain-stitch embroidery', 'Relaxed fit, thick ribbed collar'] }),
+  p('corduroy-piggy-tee', 'Corduroy Piggy Tee', 'apparel', 3699, 'apparel', 'A big plum corduroy pig with its edges left to fray, stitched down with running stitches, and Billix in small script beside it.', { variants: [{ name: 'Color', options: ['Natural', 'Blush', 'Pale Sage'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Corduroy appliqué that softens with each wash', 'Relaxed fit, thick ribbed collar'] }),
+  p('alice-photo-tee', 'Alice Instant Photo Tee', 'apparel', 3299, 'apparel', 'Alice with her microphone, printed as an instant photo taped to the shirt, with her name written underneath.', { variants: [{ name: 'Color', options: ['Washed Black', 'Heather Gray', 'Sage'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Full-color print', 'Relaxed fit, thick ribbed collar'] }),
+  p('icon-sleeve-long-sleeve', 'Bill Icons Long Sleeve', 'apparel', 4299, 'apparel', 'A small embroidered piggy on the chest and the bills of the house stitched down one sleeve: light, heat, water, internet, home and a coin.', { variants: [{ name: 'Color', options: ['Bone', 'Heather Gray', 'Dusty Blue'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed cotton', 'Embroidered chest piggy and sleeve icons', 'Relaxed fit, ribbed cuffs'] }),
+  p('signature-hoodie', 'Chenille Back Patch Hoodie', 'apparel', 6499, 'apparel', 'A small embroidered piggy on the chest and, across the back, a big chenille piggy on its stack of cash with Billix in script. Pick Plain for the chest piggy only.', { featured: true, variants: [{ name: 'Color', options: ['Forest Green', 'Washed Black', 'Chocolate Brown'] }, { name: 'Back', options: ['Chenille patch', 'Plain'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed brushed fleece', 'Satin-stitch chest piggy, optional chenille back patch', 'Double-layer hood, no drawstrings'] }),
+  p('pocket-piggy-hoodie', 'Pocket Piggy Hoodie', 'apparel', 6499, 'apparel', 'A chenille piggy bank climbing out of the front pocket, with a gold coin waiting on the edge.', { variants: [{ name: 'Color', options: ['Oatmeal', 'Charcoal', 'Dusty Blue'] }, { name: 'Size', options: ['S', 'M', 'L', 'XL', '2XL'] }], details: ['Heavyweight garment-dyed brushed fleece', 'Chenille appliqué and embroidered coin', 'Double-layer hood, no drawstrings'] }),
+  p('tote-bag', 'Chenille Piggy Tote', 'apparel', 2999, 'accessory', 'Heavy natural canvas with a colored base and long handles, and our chenille piggy with Billix in script on the front.', { variants: [{ name: 'Color', options: ['Deep Teal', 'Black', 'Chocolate Brown'] }], details: ['Heavy cotton canvas', 'Chenille patch, chain-stitch script', 'Long handles that fit over the shoulder'] }),
+  p('alice-tote', 'Alice Tote', 'apparel', 2499, 'accessory', 'Alice with her own tote on her shoulder, ready for errands, printed on heavy natural canvas.', { variants: [{ name: 'Color', options: ['Rust', 'Deep Teal', 'Black'] }], details: ['Heavy cotton canvas', 'Full-color print', 'Long handles that fit over the shoulder'] }),
   // Accessories
-  p('ceramic-mug', 'Billix Ceramic Mug', 'accessories', 1699, 'accessory', 'A 12 oz mug for reading your bills over coffee.', { featured: true, variants: [{ name: 'Color', options: ['Cream', 'Deep Teal'] }], details: ['12 oz stoneware', 'Dishwasher and microwave safe'] }),
-  p('alice-mug', 'Alice Coffee Mug', 'accessories', 1899, 'accessory', 'Alice, on your morning mug.'),
+  p('ceramic-mug', 'Billix Stoneware Mug', 'accessories', 1699, 'accessory', 'Speckled stoneware with a hand-thrown shape, dipped in a glossy deep teal glaze that runs at the edge, with our piggy bank drawn small on the front.', { featured: true, details: ['12 oz speckled stoneware', 'Dipped deep teal glaze, raw clay foot', 'Dishwasher and microwave safe'] }),
+  p('alice-mug', 'Alice Coffee First Mug', 'accessories', 1899, 'accessory', 'Alice, winking, with the one piece of advice she gives before breakfast: coffee first.', { details: ['11 oz ceramic', 'Full-color print, deep teal inside and handle', 'Dishwasher and microwave safe'] }),
+  p('bill-icons-mug', 'Bill Icons Mug', 'accessories', 1999, 'accessory', 'Every bill in the house, drawn small and scattered in gold and cream over matte deep teal, with the piggy bank in the middle of it all. Gold inside.', { details: ['12 oz ceramic', 'Matte deep teal outside, gold-color glaze inside', 'Hand wash only; not microwave safe'] }),
   p('water-bottle', 'Billix Water Bottle', 'accessories', 2499, 'accessory', 'Insulated stainless bottle.'),
   p('notebook', 'Billix Notebook', 'accessories', 1499, 'accessory', 'Lined notebook for budgets and notes.'),
   p('sticker-pack', 'Billix Sticker Pack', 'accessories', 699, 'accessory', 'Logo and Alice stickers.'),
@@ -74,24 +101,17 @@ export const products: Product[] = [
   p('bill-organizer-folder', 'Billix Bill Organizer Folder', 'accessories', 1999, 'accessory', 'A 12-pocket expanding folder with a tab for every month.', { details: ['12 labeled pockets', 'Elastic closure', 'Fits letter-size bills'] }),
   p('meter-reading-notepad', 'Meter Reading Notepad', 'workbooks', 899, 'accessory', 'A tear-off pad for logging electric, gas and water meter readings.'),
   p('bill-day-desk-planner', 'Bill Day Desk Planner', 'workbooks', 2499, 'paperback', 'An undated desk planner built around due dates, with a monthly bill review page.', { featured: true, details: ['12 undated months', 'Monthly bill review pages', 'Lay-flat binding'] }),
-  p('alice-sticker-sheet', 'Alice Expressions Sticker Sheet', 'alice', 599, 'accessory', 'Alice in eight moods, from thinking to celebrating.'),
-  p('starter-bundle', 'Billix Starter Bundle', 'bundles', 3999, 'bundle', 'The flagship ebook, the bill tracker and a Billix mug, together.', { featured: true, details: ['Ebook + printable tracker', 'Billix ceramic mug', 'Gift-ready box'] }),
-  p('new-homeowner-gift-set', 'New Homeowner Gift Set', 'bundles', 5999, 'bundle', 'The Homeowner’s Bill Handbook, the bill organizer folder and a magnet pack.'),
-  // Alice collection (planned, unpriced = draft)
-  ...[
-    ['alice-explains-electricity', 'Alice Explains Electricity'],
-    ['alice-explains-water', 'Alice Explains Water'],
-    ['alice-explains-heating', 'Alice Explains Heating'],
-    ['alice-explains-saving-energy', 'Alice Explains Saving Energy'],
-    ['alice-explains-household-expenses', 'Alice Explains Household Expenses'],
-    ['alice-activity-book', 'Alice Activity Book'],
-  ].map(([slug, name]) =>
-    p(slug, name, 'alice', slug === 'alice-activity-book' ? 999 : 1299, 'paperback', slug === 'alice-activity-book' ? 'Puzzles, mazes and coloring pages about where electricity, water and money go. Ages 6–10.' : 'An illustrated picture book for ages 5–9: Alice explains how it works at home, in words kids understand.'),
-  ),
+  // Bundles are hidden (draft) until they are re-planned around the handbook and re-photographed:
+  // their photos show books that are no longer sold.
+  p('starter-bundle', 'Billix Starter Bundle', 'bundles', 3999, 'bundle', 'The Household Utility Savings Handbook ebook, the bill tracker and a Billix mug, together.', { status: 'draft', details: ['Handbook ebook + printable tracker', 'Billix ceramic mug', 'Gift-ready box'] }),
+  p('new-homeowner-gift-set', 'New Homeowner Gift Set', 'bundles', 5999, 'bundle', 'The Household Utility Savings Handbook ebook, the bill organizer folder and a magnet pack.', { status: 'draft' }),
 ]
 
 /** Drafts are internal planning items and never shown with a price. */
-export const visibleProducts = products.filter((x) => x.status !== 'draft' || x.collection === 'alice')
+export const visibleProducts = products.filter((x) => x.status !== 'draft')
+
+/** Collections with something to show; one whose items are all drafts (bundles, for now) stays out of the shop. */
+export const collections = allCollections.filter((c) => visibleProducts.some((x) => x.collection === c.slug))
 
 export const formatPrice = (cents: number) =>
   cents === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100)

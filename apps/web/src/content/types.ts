@@ -198,7 +198,6 @@ export type ShopCollection =
   | 'workbooks'
   | 'apparel'
   | 'accessories'
-  | 'alice'
   | 'bundles'
 
 export interface Product {
@@ -217,6 +216,12 @@ export interface Product {
   variants?: { name: string; options: string[] }[]
   /** Short selling points shown on the product page. */
   details?: string[]
+  /** Chapter list for a book, shown under "What's inside". */
+  inside?: string[]
+  /** Label and value pairs for a book's specifications. */
+  specs?: { label: string; value: string }[]
+  /** A free file the visitor can download now, without checkout. */
+  downloadUrl?: string
 }
 
 /** A named official resource on a state guide. `summary` may use inline markup and citations. */

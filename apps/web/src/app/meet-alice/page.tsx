@@ -47,7 +47,7 @@ export default function MeetAlicePage() {
       <Section tone="paper">
         <h2 className="text-3xl font-extrabold text-teal-deep">Watch Alice explain</h2>
         <div className="mt-8 grid gap-5 md:grid-cols-3">{videos.map((v) => <VideoCard key={v.slug} v={v} />)}</div>
-        <p className="mt-8 text-muted">Alice learning books and merchandise for kids and families are planned for the <Link href="/shop/collections/alice" className="font-semibold text-teal-ink underline">Alice Collection</Link>.</p>
+        <p className="mt-8 text-muted">You can also find Alice on a mug, a tee and a tote in the <Link href="/shop" className="font-semibold text-teal-ink underline">Billix shop</Link>.</p>
       </Section>
     </>
   )
