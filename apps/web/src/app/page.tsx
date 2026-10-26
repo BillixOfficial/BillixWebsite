@@ -51,7 +51,7 @@ export default function HomePage() {
   const feature = videos.find((v) => v.slug === 'electric-bill-line-by-line')!
   const rail = videos.filter((v) => v.slug !== feature.slug && v.category !== 'channel')
   const updates = getUpdates().slice(0, 3)
-  const shopPicks = ['billix-guide-paperback', 'monthly-bill-tracker', 'classic-tee', 'ceramic-mug'].map((s) => products.find((p) => p.slug === s)!).filter(Boolean)
+  const shopPicks = ['household-utility-savings-handbook', 'monthly-bill-tracker', 'classic-tee', 'ceramic-mug'].map((s) => products.find((p) => p.slug === s)!).filter(Boolean)
 
   return (
     <>

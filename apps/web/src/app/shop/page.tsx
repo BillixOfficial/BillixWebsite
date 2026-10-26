@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, BookOpen, Download, Gift, Truck } from 'lucide-react'
-import { collections, visibleProducts } from '@/content/products'
+import { ArrowRight, BookOpen, Check, Download, ShieldCheck, Truck } from 'lucide-react'
+import { collections, formatPrice, visibleProducts } from '@/content/products'
 import { productImages } from '@/content/product-images'
 import { ProductCard } from '@/components/shop/product-ui'
 import { CollectionNav, ShopNotice } from '@/components/shop/shop-chrome'
@@ -11,13 +11,14 @@ import { Reveal } from '@/components/ui/reveal'
 
 export const metadata: Metadata = {
   title: 'Shop',
-  description: 'Billix books, printable bill trackers and planners, apparel, mugs and gifts for people who like knowing where their money goes.',
+  description: 'The Billix Household Utility Savings Handbook, printable bill trackers and planners, apparel, mugs and gifts for people who like knowing where their money goes.',
   alternates: { canonical: '/shop' },
 }
 
 export default function ShopPage() {
   const featured = visibleProducts.filter((p) => p.featured)
-  const heroImg = productImages['starter-bundle']?.[1] ?? productImages['classic-tee']?.[1]
+  const handbook = visibleProducts.find((p) => p.slug === 'household-utility-savings-handbook')
+  const heroImg = productImages['household-utility-savings-handbook']?.[1] ?? productImages['classic-tee']?.[1]
   return (
     <>
       <ShopNotice />
@@ -28,12 +29,12 @@ export default function ShopPage() {
             <p className="mt-5 max-w-md text-lg text-cream/80">Plain-English guides, printable trackers and Billix gear. Every purchase helps us keep the guides free.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="#all" className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 font-semibold text-teal-night hover:bg-highlight">Shop everything <ArrowRight className="size-4" aria-hidden /></Link>
-              <Link href="/shop/collections/books" className="rounded-full px-6 py-3 font-semibold ring-1 ring-cream/30 hover:bg-cream/10">Books &amp; ebooks</Link>
+              <Link href="/shop/household-utility-savings-handbook" className="rounded-full px-6 py-3 font-semibold ring-1 ring-cream/30 hover:bg-cream/10">The handbook</Link>
             </div>
           </div>
           <div className="relative min-h-72 bg-teal-night/40">
             {heroImg ? (
-              <Image src={heroImg} alt="Billix merchandise" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+              <Image src={heroImg} alt="Pages from The Billix Household Utility Savings Handbook" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
             ) : (
               <div className="grid h-full place-items-center"><AliceFace mood="shopping" size={260} /></div>
             )}
@@ -41,15 +42,41 @@ export default function ShopPage() {
         </div>
         <ul className="mt-6 grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
           {[
-            { I: Download, t: 'Printables download instantly' },
+            { I: Download, t: 'Free printables from the handbook' },
             { I: BookOpen, t: 'Written by the Billix team' },
             { I: Truck, t: 'U.S. shipping on physical items' },
-            { I: Gift, t: 'Gift-ready bundles' },
+            { I: ShieldCheck, t: 'Facts checked and dated' },
           ].map(({ I, t }) => (
             <li key={t} className="flex items-center gap-2.5 rounded-xl bg-paper px-4 py-3 ring-1 ring-line"><I className="size-5 shrink-0 text-teal" aria-hidden /><span className="font-medium text-teal-deep">{t}</span></li>
           ))}
         </ul>
       </section>
+
+      {handbook && (
+        <section className="container-x pt-14" aria-labelledby="handbook">
+          <div className="grid items-center gap-10 overflow-hidden rounded-[var(--radius-panel)] bg-paper p-6 ring-1 ring-line sm:p-10 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-14">
+            <Link href={`/shop/${handbook.slug}`} className="relative mx-auto block aspect-square w-full max-w-md overflow-hidden rounded-2xl">
+              <Image src={productImages[handbook.slug]![0]} alt="Cover of The Billix Household Utility Savings Handbook, 2026 edition" fill sizes="(min-width: 1024px) 26rem, 90vw" className="object-cover" />
+            </Link>
+            <div>
+              <p className="font-semibold text-teal-ink">New for 2026 &middot; PDF ebook</p>
+              <h2 id="handbook" className="mt-2 text-[clamp(2rem,4vw,3rem)] font-extrabold leading-[1.02] tracking-tight text-teal-deep">The Billix Household Utility <span className="mark text-teal-night">Savings</span> Handbook</h2>
+              <p className="mt-4 font-display text-xl text-ink">Understand every bill. Cut what you can. Prove what you save.</p>
+              <p className="mt-4 max-w-xl text-muted">{handbook.description}</p>
+              <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
+                {(handbook.details ?? []).slice(0, 4).map((d) => (
+                  <li key={d} className="flex items-start gap-2.5 text-[0.97rem] text-teal-deep"><Check className="mt-0.5 size-4 shrink-0 text-teal" aria-hidden />{d}</li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <Link href={`/shop/${handbook.slug}`} className="inline-flex items-center gap-2 rounded-full bg-teal-deep px-6 py-3 font-semibold text-cream transition hover:bg-teal-night">See what&rsquo;s inside <ArrowRight className="size-4" aria-hidden /></Link>
+                <p className="font-display text-2xl font-bold text-teal-deep">{formatPrice(handbook.priceCents)}</p>
+              </div>
+              <p className="mt-3 text-sm text-muted">Coming soon. Checkout opens at launch, and nothing is charged until then.</p>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="container-x py-14">
         <div className="flex items-end justify-between gap-4">

@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { clsx } from 'clsx'
 import { Check, Minus, Plus, ShoppingBag } from 'lucide-react'
 import type { Product } from '@/content/types'
 import { formatPrice } from '@/content/products'
-import { productImages } from '@/content/product-images'
+import { imageForOptions, productImages } from '@/content/product-images'
 import { useCart } from './cart'
 
 const fallbackTone: Record<string, string> = {
@@ -16,12 +16,11 @@ const fallbackTone: Record<string, string> = {
   workbooks: 'from-gold-soft to-[#f3d79e]',
   apparel: 'from-plum-soft to-[#dccfe8]',
   accessories: 'from-[#f4e2d6] to-[#ecd0bd]',
-  alice: 'from-gold-soft to-plum-soft',
   bundles: 'from-teal-soft to-gold-soft',
 }
 
-export function ProductImage({ p, index = 0, className, sizes = '(min-width: 1024px) 25vw, 50vw', priority }: { p: Product; index?: number; className?: string; sizes?: string; priority?: boolean }) {
-  const src = productImages[p.slug]?.[index]
+export function ProductImage({ p, index = 0, options, className, sizes = '(min-width: 1024px) 25vw, 50vw', priority }: { p: Product; index?: number; options?: Record<string, string>; className?: string; sizes?: string; priority?: boolean }) {
+  const src = (options && imageForOptions(p.slug, options)) || productImages[p.slug]?.[index]
   if (src) {
     return (
       <div className={clsx('relative overflow-hidden bg-sand', className)}>
@@ -39,7 +38,8 @@ export function ProductImage({ p, index = 0, className, sizes = '(min-width: 102
 export function ProductCard({ p, priority }: { p: Product; priority?: boolean }) {
   const { add } = useCart()
   const [added, setAdded] = useState(false)
-  const quickAdd = !p.variants?.length
+  // Free downloads open their own page, which has the download button; there is nothing to add to a bag.
+  const quickAdd = !p.variants?.length && !p.downloadUrl
   return (
     <div className="group relative flex flex-col">
       <Link href={`/shop/${p.slug}`} className="relative block overflow-hidden rounded-2xl">
@@ -72,9 +72,27 @@ export function ProductCard({ p, priority }: { p: Product; priority?: boolean })
   )
 }
 
+// The options picked in AddToBag, shared with ProductGallery so the photo follows the choice.
+const OptionsContext = createContext<{ opts: Record<string, string>; setOpt: (name: string, value: string) => void } | null>(null)
+
+export function ProductOptionsProvider({ p, children }: { p: Product; children: React.ReactNode }) {
+  const [opts, setOpts] = useState<Record<string, string>>(() => Object.fromEntries((p.variants ?? []).filter((v) => v.name !== 'Size').map((v) => [v.name, v.options[0]])))
+  const setOpt = (name: string, value: string) => setOpts((o) => ({ ...o, [name]: value }))
+  return <OptionsContext.Provider value={{ opts, setOpt }}>{children}</OptionsContext.Provider>
+}
+
 export function ProductGallery({ p }: { p: Product }) {
   const imgs = productImages[p.slug] ?? []
   const [i, setI] = useState(0)
+  const opts = useContext(OptionsContext)?.opts
+  // When a new option is picked, jump to its photo (state adjusted during render, not in an effect).
+  const picked = JSON.stringify(opts ?? {})
+  const [shown, setShown] = useState(picked)
+  if (picked !== shown) {
+    setShown(picked)
+    const j = opts ? imgs.indexOf(imageForOptions(p.slug, opts) ?? '') : -1
+    if (j >= 0) setI(j)
+  }
   return (
     <div>
       <ProductImage p={p} index={i} className="aspect-square rounded-[var(--radius-panel)]" sizes="(min-width: 1024px) 50vw, 100vw" priority />
@@ -93,11 +111,20 @@ export function ProductGallery({ p }: { p: Product }) {
 
 const swatch: Record<string, string> = {
   'Deep Teal': '#163f3b', Cream: '#f4ead0', 'Heather Gray': '#b9bcbb', Oatmeal: '#e4d9c6', Gold: '#e3a63c', Stone: '#cfc6b6',
+  'Washed Black': '#2b2b2b', 'Washed Navy': '#1f2d44', Bone: '#f3efe6', 'Sky Blue': '#b8c8d6', Sage: '#b3c2a8', 'Slate Blue': '#5b6f86',
+  Rust: '#b9532c', Mustard: '#d9a441', Natural: '#ece3d0', 'Faded Teal': '#3d7f78',
+  'Chocolate Brown': '#4a3426', 'Forest Green': '#26402f', 'Dusty Blue': '#a9bccd', Blush: '#e8cfc6', 'Pale Sage': '#c9d3bf',
+  Charcoal: '#3a3a3a', Black: '#1f1f1f',
 }
 
 export function AddToBag({ p }: { p: Product }) {
   const { add } = useCart()
+  const shared = useContext(OptionsContext)
   const [opts, setOpts] = useState<Record<string, string>>(() => Object.fromEntries((p.variants ?? []).map((v) => [v.name, v.name === 'Size' ? '' : v.options[0]])))
+  const pick = (name: string, value: string) => {
+    setOpts((o) => ({ ...o, [name]: value }))
+    shared?.setOpt(name, value)
+  }
   const [qty, setQty] = useState(1)
   const [error, setError] = useState('')
   const [added, setAdded] = useState(false)
@@ -127,9 +154,9 @@ export function AddToBag({ p }: { p: Product }) {
             {v.options.map((o) => {
               const on = opts[v.name] === o
               return v.name === 'Color' && swatch[o] ? (
-                <button key={o} type="button" aria-pressed={on} aria-label={o} title={o} onClick={() => setOpts({ ...opts, [v.name]: o })} className={clsx('size-10 rounded-full ring-2 ring-offset-2 transition', on ? 'ring-teal' : 'ring-line hover:ring-teal/50')} style={{ background: swatch[o] }} />
+                <button key={o} type="button" aria-pressed={on} aria-label={o} title={o} onClick={() => pick(v.name, o)} className={clsx('size-10 rounded-full ring-2 ring-offset-2 transition', on ? 'ring-teal' : 'ring-line hover:ring-teal/50')} style={{ background: swatch[o] }} />
               ) : (
-                <button key={o} type="button" aria-pressed={on} onClick={() => setOpts({ ...opts, [v.name]: o })} className={clsx('min-w-12 rounded-xl px-3.5 py-2.5 text-sm font-semibold ring-1 transition', on ? 'bg-teal-deep text-cream ring-teal-deep' : 'bg-paper text-teal-deep ring-line hover:ring-teal')}>
+                <button key={o} type="button" aria-pressed={on} onClick={() => pick(v.name, o)} className={clsx('min-w-12 rounded-xl px-3.5 py-2.5 text-sm font-semibold ring-1 transition', on ? 'bg-teal-deep text-cream ring-teal-deep' : 'bg-paper text-teal-deep ring-line hover:ring-teal')}>
                   {o}
                 </button>
               )

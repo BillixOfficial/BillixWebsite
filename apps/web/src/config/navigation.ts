@@ -93,8 +93,8 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
   {
     title: 'Shop',
     links: [
-      { label: 'Books', href: '/shop/collections/books' },
-      { label: 'Digital Products', href: '/shop/collections/digital' },
+      { label: 'The Handbook', href: '/shop/household-utility-savings-handbook' },
+      { label: 'Free Printables', href: '/shop/collections/digital' },
       { label: 'Merchandise', href: '/shop/collections/apparel' },
       { label: 'Order Support', href: '/help#orders' },
     ],

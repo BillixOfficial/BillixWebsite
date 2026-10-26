@@ -33,7 +33,7 @@ export function CartView() {
             const p = products.find((x) => x.slug === l.slug)!
             return (
               <li key={i} className="flex gap-4 py-5">
-                <Link href={`/shop/${p.slug}`} className="shrink-0"><ProductImage p={p} className="size-24 rounded-xl sm:size-28" sizes="112px" /></Link>
+                <Link href={`/shop/${p.slug}`} className="shrink-0"><ProductImage p={p} options={l.options} className="size-24 rounded-xl sm:size-28" sizes="112px" /></Link>
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex justify-between gap-4">
                     <Link href={`/shop/${p.slug}`} className="font-display font-bold text-teal-deep hover:underline">{p.name}</Link>
