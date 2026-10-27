@@ -41,8 +41,8 @@ export const productImages: Record<string, string[]> = {
   'wall-calendar': ['/shop/wall-calendar.webp'],
   'enamel-pin': ['/shop/enamel-pin.webp'],
   'bill-organizer-folder': ['/shop/bill-organizer-folder.webp'],
-  'meter-reading-notepad': ['/shop/meter-reading-notepad.webp'],
-  'bill-day-desk-planner': ['/shop/bill-day-desk-planner.webp', '/shop/bill-day-desk-planner-2.webp'],
+  'meter-reading-notepad': ['/shop/meter-reading-notepad-fridge.webp', '/shop/meter-reading-notepad-flat.webp'],
+  'bill-day-desk-planner': ['/shop/planner-bill-day-linen.webp', '/shop/planner-bill-day-inside.webp'],
   'starter-bundle': ['/shop/starter-bundle.webp', '/shop/starter-bundle-2.webp'],
   'new-homeowner-gift-set': ['/shop/new-homeowner-gift-set.webp'],
 }
