@@ -1,8 +1,14 @@
 import type { Article, Source } from './types'
+import dataUpdates from './data-updates.json'
+import dailyUpdates from './daily-updates.json'
 
 /**
  * Latest Bill Updates. Short, dated items built only from verified public data.
  * Each item states the date of the data it uses. All URLs checked 2026-10-13.
+ *
+ * Two more lists are merged in below, both written by .github/workflows/daily-updates.yml:
+ * - data-updates.json: EIA/BLS releases, generated from templates and published automatically.
+ * - daily-updates.json: researched drafts, added only when the draft's pull request is merged.
  */
 
 const ACCESSED = '2026-10-13'
@@ -10,7 +16,7 @@ const ACCESSED = '2026-10-13'
 const src = (title: string, publisher: string, url: string, note?: string): Source =>
   note ? { title, publisher, url, accessed: ACCESSED, note } : { title, publisher, url, accessed: ACCESSED }
 
-export const updates: Article[] = [
+const editorialUpdates: Article[] = [
   // ---------------------------------------------------------------------------
   // Heating oil, week of October 5, 2026
   // ---------------------------------------------------------------------------
@@ -274,3 +280,5 @@ export const updates: Article[] = [
     ],
   },
 ]
+
+export const updates: Article[] = [...editorialUpdates, ...(dataUpdates as unknown as Article[]), ...(dailyUpdates as unknown as Article[])]

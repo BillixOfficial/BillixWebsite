@@ -47,6 +47,15 @@ cd apps/api && .venv/bin/pytest && .venv/bin/ruff check .
 
 All editorial content is typed data in `apps/web/src/content/`. Every factual claim cites a source with `[^n]`; the content-integrity tests fail on broken citations, unknown internal links, emoji, or products marked for sale. To publish a video, set its `youtubeId` in `src/content/videos.ts`.
 
+## Daily bill updates
+
+`.github/workflows/daily-updates.yml` runs every morning:
+
+- **Data updates (published automatically).** `apps/web/scripts/updates/data-updates.ts` checks EIA (weekly heating oil, propane and gasoline; monthly home electricity and gas prices) and BLS (monthly CPI for household bills). Each new release becomes a templated, sourced article in `src/content/data-updates.json`, which is committed to `main`.
+- **Daily draft (needs your approval).** `apps/web/scripts/updates/draft-update.ts` asks Claude to research one new bill development from official sources and opens a pull request labeled `daily-draft`. Merge it to publish, or close it to discard it. A new draft isn't created while one is still open.
+
+Setup: add the `ANTHROPIC_API_KEY` (required for drafts) and `EIA_API_KEY` (free, recommended) repository secrets, and turn on Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests". Run it any time from the Actions tab (Daily bill updates > Run workflow).
+
 ## Brand colors
 
 | Token | Hex | Use |

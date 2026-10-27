@@ -1,0 +1,115 @@
+[
+  {
+    "slug": "household-bill-prices-cpi-2026-09",
+    "title": "Natural Gas Prices Led Household Bill Increases in September 2026",
+    "description": "In the Consumer Price Index for September 2026, natural gas prices were 5.0% higher than a year earlier, compared with 3.7% for all items.",
+    "category": "heating-cooling",
+    "publishedAt": "2026-10-16",
+    "geography": {
+      "scope": "national",
+      "label": "United States"
+    },
+    "keyTakeaways": [
+      "Overall consumer prices were 3.7% higher in September 2026 than a year earlier (Billix calculation from BLS index values)[^1][^2].",
+      "Utility (piped) gas service rose the most of the household bills we track: +5.0%[^2].",
+      "3 of 6 bill types rose faster than overall prices[^2]."
+    ],
+    "sections": [
+      {
+        "id": "the-numbers",
+        "heading": "The numbers",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "The Bureau of Labor Statistics measures price changes for what households buy in the Consumer Price Index (CPI)[^1]. Comparing September 2026 with September 2025, using the U.S. city average indexes that are not seasonally adjusted (Billix calculation)[^2]:"
+          },
+          {
+            "type": "table",
+            "caption": "Change in prices, September 2025 to September 2026",
+            "headers": [
+              "What you pay for",
+              "Change over 12 months"
+            ],
+            "rows": [
+              [
+                "Utility (piped) gas service",
+                "+5.0%"
+              ],
+              [
+                "Water, sewer and trash collection",
+                "+4.8%"
+              ],
+              [
+                "Electricity",
+                "+4.4%"
+              ],
+              [
+                "Rent of primary residence",
+                "+2.8%"
+              ],
+              [
+                "Internet services",
+                "+0.2%"
+              ],
+              [
+                "Motor vehicle insurance",
+                "-5.0%"
+              ],
+              [
+                "All items (overall inflation)",
+                "+3.7%"
+              ]
+            ]
+          },
+          {
+            "type": "p",
+            "text": "The CPI tracks prices, not bills: what you pay also depends on how much you use and on fees and taxes where you live. Changes are rounded to one decimal place."
+          }
+        ]
+      },
+      {
+        "id": "what-it-means",
+        "heading": "What it means for your bill",
+        "blocks": [
+          {
+            "type": "callout",
+            "tone": "note",
+            "text": "National averages are a yardstick, not the price you will pay. Your bill depends on your provider, your state and how much you use."
+          },
+          {
+            "type": "p",
+            "text": "To check a bill line by line, start with the [bill guides](/categories)."
+          }
+        ]
+      },
+      {
+        "id": "how-this-was-made",
+        "heading": "How this update was made",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Billix publishes this update automatically when the Bureau of Labor Statistics releases the monthly Consumer Price Index. The numbers come straight from the agency's data service and the wording follows a fixed template, so nothing here is estimated or rewritten."
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "title": "Consumer Price Index",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cpi/",
+        "accessed": "2026-10-16"
+      },
+      {
+        "title": "CPI-U U.S. city average series (CUUR0000SA0, CUUR0000SEHF01, CUUR0000SEHF02, CUUR0000SEHG, CUUR0000SEHA, CUUR0000SETE, CUUR0000SEEE03)",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://data.bls.gov/timeseries/CUUR0000SA0",
+        "accessed": "2026-10-16",
+        "note": "Not seasonally adjusted. Data for September 2026."
+      }
+    ],
+    "kind": "update",
+    "authorId": "billix-editorial",
+    "reviewedAt": "2026-10-16"
+  }
+]
