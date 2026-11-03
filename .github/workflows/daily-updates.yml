@@ -1,0 +1,144 @@
+name: Daily bill updates
+
+# Runs every morning (about 10 a.m. Eastern):
+#  1. data:  checks EIA and BLS for new releases and publishes templated, sourced updates
+#            straight to main (Vercel deploys them). Nothing is written by a model.
+#  2. draft: asks Claude to research and draft one news update, and opens a pull request.
+#            Nothing from this job is published until that pull request is merged.
+#
+# Secrets (Settings > Secrets and variables > Actions):
+#   ANTHROPIC_API_KEY  required for the draft job (it is skipped without it)
+#   EIA_API_KEY        recommended, free at https://www.eia.gov/opendata/register.php
+#   BLS_API_KEY        optional, free at https://data.bls.gov/registrationEngine/
+# The draft job also needs Settings > Actions > General > "Allow GitHub Actions to create
+# and approve pull requests" turned on.
+
+on:
+  schedule:
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      job:
+        description: Which part to run
+        type: choice
+        options: [both, data, draft]
+        default: both
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-updates
+  cancel-in-progress: false
+
+jobs:
+  data:
+    if: inputs.job != 'draft'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - name: Check EIA and BLS for new releases
+        run: npx tsx scripts/updates/data-updates.ts
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+      - id: changes
+        run: git diff --quiet src/content/data-updates.json || echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Check the new updates
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          NEXT_PUBLIC_SITE_URL: https://billixapp.com
+        run: |
+          npm run typecheck
+          npx vitest run tests/unit/content-integrity.test.ts
+      - name: Publish
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "Billix data updates"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/data-updates.json
+          git commit -m "Add data updates from EIA/BLS ($(date -u +%F))"
+          git push origin HEAD:main
+
+  draft:
+    needs: data
+    if: always() && inputs.job != 'data'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: apps/web
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - id: gate
+        name: Skip while a draft is waiting for review
+        env:
+          HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        run: |
+          if [ "$HAS_KEY" != "true" ]; then
+            echo "::notice::ANTHROPIC_API_KEY is not set; skipping the daily draft."
+            echo "run=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          open=$(gh pr list --label daily-draft --state open --json number --jq length)
+          if [ "$open" -gt 0 ]; then
+            echo "::notice::A daily draft is still open for review; skipping today."
+            echo "run=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "run=true" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - if: steps.gate.outputs.run == 'true'
+        run: npm ci
+      - id: draft
+        if: steps.gate.outputs.run == 'true'
+        name: Research and draft one update
+        run: npx tsx scripts/updates/draft-update.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Check the draft
+        if: steps.draft.outputs.slug != ''
+        env:
+          NEXT_PUBLIC_SITE_URL: https://billixapp.com
+        run: |
+          npm run typecheck
+          npx vitest run tests/unit/content-integrity.test.ts
+      - name: Open a pull request for review
+        if: steps.draft.outputs.slug != ''
+        env:
+          SLUG: ${{ steps.draft.outputs.slug }}
+          TITLE: ${{ steps.draft.outputs.title }}
+        run: |
+          branch="daily-draft/$(date -u +%F)-${SLUG}"
+          git config user.name "Billix daily draft"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add src/content/daily-updates.json
+          git commit -m "Draft update: ${TITLE}"
+          git push origin "$branch"
+          gh label create daily-draft --color C9A227 --description "Drafted Bill Update awaiting review" --force
+          gh pr create --base main --head "$branch" --title "Draft update: ${TITLE}" --body-file ../../draft-pr-body.md --label daily-draft --assignee "${{ github.repository_owner }}"
