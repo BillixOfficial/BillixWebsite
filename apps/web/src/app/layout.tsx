@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   title: { default: 'Billix: Understand Your Bills. Keep More of Your Money.', template: '%s | Billix' },
   description: site.description,
   applicationName: 'Billix',
-  icons: { icon: '/brand/favicon.png', apple: '/brand/favicon.png' },
   openGraph: {
     type: 'website',
     siteName: 'Billix',
